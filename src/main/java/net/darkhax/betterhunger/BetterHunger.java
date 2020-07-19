@@ -9,13 +9,13 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod("betterhunger")
@@ -29,7 +29,11 @@ public class BetterHunger {
         
         MinecraftForge.EVENT_BUS.addListener(this::onEntityTick);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> MinecraftForge.EVENT_BUS.addListener(this::onHudRender));
+        
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+        	
+        	MinecraftForge.EVENT_BUS.addListener(this::onHudRender);
+        }
     }
     
     private void onHudRender (RenderGameOverlayEvent.Pre event) {
